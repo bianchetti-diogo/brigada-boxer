@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Brigada Boxer — Brigadistas</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo-badge">🔥</div>
+  <div>
+    <h1>BRIGADA BOXER</h1>
+    <p class="subtitle">Cadastro e Gestão de Brigadistas</p>
+  </div>
+  <a href="index.html" class="back-link">← Menu Principal</a>
+</header>
+
+<div class="container">
+  <div id="config-warning" class="config-warning" style="display:none;"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cadastro">➕ Cadastro</button>
+    <button class="tab-btn" data-tab="quadro">🏢 Quadro Hierárquico</button>
+    <button class="tab-btn" data-tab="lista">📋 Lista de Integrantes</button>
+  </div>
+
+  <!-- ABA CADASTRO -->
+  <section id="tab-cadastro" class="tab-content">
+    <div class="panel">
+      <h3 id="form-title">Novo Brigadista</h3>
+      <form id="form-brigadista">
+        <input type="hidden" id="brigadista-id" />
+        <div class="form-grid">
+          <div class="field field-full">
+            <label>Foto</label>
+            <div class="row">
+              <img id="foto-preview" class="avatar avatar-lg" src="https://placehold.co/96x96?text=Foto" />
+              <input type="file" id="foto-input" accept="image/*" />
+            </div>
+          </div>
+          <div class="field field-full">
+            <label>Nome completo *</label>
+            <input type="text" id="campo-nome" required placeholder="Ex: João da Silva" />
+          </div>
+          <div class="field">
+            <label>Cargo na Brigada *</label>
+            <select id="campo-cargo" required>
+              <option value="">Selecione...</option>
+              <option>Coordenador</option>
+              <option>Líder de Área</option>
+              <option>Integrante</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Área de Trabalho *</label>
+            <select id="campo-area" required>
+              <option value="">Selecione...</option>
+              <option>FINANCEIRO</option>
+              <option>COMERCIAL</option>
+              <option>MARKETING</option>
+              <option>RH</option>
+              <option>LOGÍSTICA</option>
+              <option>PÓS VENDAS</option>
+              <option>EXPEDIÇÃO E QUALIDADE</option>
+              <option>ALMOXARIFADO</option>
+              <option>ASSISTÊNCIA TÉCNICA</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Piso de Gestão *</label>
+            <select id="campo-piso" required>
+              <option value="">Selecione...</option>
+              <option>TÉRREO</option>
+              <option>1° ANDAR</option>
+              <option>2° ANDAR</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Função na Brigada *</label>
+            <select id="campo-funcao" required>
+              <option value="">Selecione...</option>
+              <option>Socorrista</option>
+              <option>Combatente</option>
+              <option>Socorrista e Combatente</option>
+              <option>Socorrista e Líder de Abandono</option>
+              <option>Combatente e Líder de Abandono</option>
+              <option>Socorrista, Combatente e Líder de Abandono</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mt-16">
+          <button type="submit" class="btn btn-primary">💾 Salvar Brigadista</button>
+          <button type="button" id="btn-cancelar-edicao" class="btn btn-secondary" style="display:none;">Cancelar edição</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ABA QUADRO HIERÁRQUICO -->
+  <section id="tab-quadro" class="tab-content" style="display:none;">
+    <div class="panel">
+      <div class="row justify-between mb-16">
+        <h3 style="margin:0;">Organograma da Brigada</h3>
+        <button id="btn-print-quadro" class="btn btn-outline">🖨️ Imprimir</button>
+      </div>
+      <div id="orgchart-container" class="orgchart"></div>
+    </div>
+  </section>
+
+  <!-- ABA LISTA -->
+  <section id="tab-lista" class="tab-content" style="display:none;">
+    <div class="panel">
+      <div class="row justify-between mb-16">
+        <h3 style="margin:0;">Integrantes da Brigada</h3>
+        <button id="btn-export-pdf" class="btn btn-primary">📄 Exportar PDF</button>
+      </div>
+      <div class="table-wrap">
+        <table id="tabela-lista">
+          <thead>
+            <tr>
+              <th>Foto</th><th>Nome</th><th>Cargo</th><th>Área</th><th>Piso</th><th>Função</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="tabela-lista-body"></tbody>
+        </table>
+      </div>
+      <div id="lista-empty" class="empty-state" style="display:none;">Nenhum brigadista cadastrado ainda.</div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/brigadistas.js"></script>
+</body>
+</html>
