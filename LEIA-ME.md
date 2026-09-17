@@ -76,6 +76,10 @@ políticas de acesso público nas tabelas e no Storage).
   - Inspeção mensal de ambos: checklist (conteúdo/mangueira, lacre/esguicho,
     integridade, armazenamento/chave-unha, sinalização), observações, 2
     brigadistas responsáveis, geração de PDF e upload da inspeção assinada.
+  - Alerta automático de inspeção mensal: cada extintor/hidrante mostra a
+    data da última inspeção e um badge "Inspeção necessária" quando já se
+    passaram 30 dias sem uma nova inspeção (ou "Aguardando 1ª inspeção" se
+    nunca foi inspecionado). Isso também aparece nos alertas do Dashboard.
 
 - **Fase 5 — Dashboard (✔️ entregue):** indicadores gerais (brigadistas
   ativos, ações totais/atrasadas, extintores/hidrantes vencidos ou em

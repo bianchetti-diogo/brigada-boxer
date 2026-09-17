@@ -29,6 +29,23 @@ function formatarDataDash(dateStr) {
   return `${d}/${m}/${y}`;
 }
 
+function diasDesdeDash(dataPassada) {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const alvo = new Date(dataPassada + "T00:00:00");
+  return Math.round((hoje - alvo) / 86400000);
+}
+
+// Retorna o mapa {id: data_inspecao_mais_recente} a partir de uma lista de inspeções
+function mapaUltimaInspecao(inspecoes, campoId) {
+  const ordenadas = [...inspecoes].sort((a, b) => (b.data_inspecao || "").localeCompare(a.data_inspecao || ""));
+  const mapa = {};
+  ordenadas.forEach((i) => {
+    if (!mapa[i[campoId]]) mapa[i[campoId]] = i.data_inspecao;
+  });
+  return mapa;
+}
+
 async function carregarDashboard() {
   if (!CONFIGURADO) {
     return;
@@ -60,11 +77,25 @@ async function carregarDashboard() {
     const extintoresAlerta = extintores.filter((e) => diasEntreDash(e.data_vencimento) <= 30);
     const hidrantesAlerta = hidrantes.filter((h) => diasEntreDash(h.data_vencimento) <= 30);
 
+    const ultimaInspExt = mapaUltimaInspecao(inspecoesExt, "extintor_id");
+    const ultimaInspHid = mapaUltimaInspecao(inspecoesHid, "hidrante_id");
+
+    const extintoresInspAtrasada = extintores.filter((e) => {
+      const ultima = ultimaInspExt[e.id];
+      return !ultima || diasDesdeDash(ultima) >= 30;
+    });
+    const hidrantesInspAtrasada = hidrantes.filter((h) => {
+      const ultima = ultimaInspHid[h.id];
+      return !ultima || diasDesdeDash(ultima) >= 30;
+    });
+
     document.getElementById("dash-brigadistas").textContent = brigadistas.length;
     document.getElementById("dash-acoes-total").textContent = totalAcoes;
     document.getElementById("dash-acoes-atrasadas").textContent = acoesAtrasadas.length;
     document.getElementById("dash-extintores-alerta").textContent = extintoresAlerta.length;
     document.getElementById("dash-hidrantes-alerta").textContent = hidrantesAlerta.length;
+    document.getElementById("dash-ext-insp-atrasada").textContent = extintoresInspAtrasada.length;
+    document.getElementById("dash-hid-insp-atrasada").textContent = hidrantesInspAtrasada.length;
 
     // ---------------- Cumprimento do Plano de Ação ----------------
     const pctPlano = totalAcoes > 0 ? Math.round((acoesConcluidas.length / totalAcoes) * 100) : 0;
@@ -118,6 +149,26 @@ async function carregarDashboard() {
         titulo: `Hidrante ${h.localizacao}`,
         sub,
         badge: dias < 0 ? '<span class="badge badge-danger">Vencido</span>' : '<span class="badge badge-warn">Hidrante</span>',
+      });
+    });
+
+    extintoresInspAtrasada.forEach((e) => {
+      const ultima = ultimaInspExt[e.id];
+      const sub = ultima ? `Última inspeção há ${diasDesdeDash(ultima)} dia(s)` : "Nunca inspecionado";
+      alertas.push({
+        titulo: `Inspeção mensal pendente: Extintor ${e.identificador} - ${e.localizacao}`,
+        sub,
+        badge: '<span class="badge badge-danger">Inspeção</span>',
+      });
+    });
+
+    hidrantesInspAtrasada.forEach((h) => {
+      const ultima = ultimaInspHid[h.id];
+      const sub = ultima ? `Última inspeção há ${diasDesdeDash(ultima)} dia(s)` : "Nunca inspecionado";
+      alertas.push({
+        titulo: `Inspeção mensal pendente: Hidrante ${h.localizacao}`,
+        sub,
+        badge: '<span class="badge badge-danger">Inspeção</span>',
       });
     });
 

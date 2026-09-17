@@ -171,6 +171,7 @@ async function carregarExtintores() {
       .order("identificador");
     if (error) throw error;
     extintoresCache = data || [];
+    await carregarUltimasInspecoesExt();
     renderTabelaExtintores(extintoresCache);
 
     const select = document.getElementById("insp-extintor");
@@ -189,6 +190,45 @@ function diasEntre(dataFutura) {
   hoje.setHours(0, 0, 0, 0);
   const alvo = new Date(dataFutura + "T00:00:00");
   return Math.round((alvo - hoje) / 86400000);
+}
+
+// ---------------- Alerta de inspeção mensal (30 dias) ----------------
+let ultimaInspecaoPorExtintor = {};
+
+async function carregarUltimasInspecoesExt() {
+  ultimaInspecaoPorExtintor = {};
+  try {
+    const { data, error } = await supabaseClient
+      .from("inspecoes_extintor")
+      .select("extintor_id, data_inspecao")
+      .order("data_inspecao", { ascending: false });
+    if (error) throw error;
+    (data || []).forEach((insp) => {
+      if (!ultimaInspecaoPorExtintor[insp.extintor_id]) {
+        ultimaInspecaoPorExtintor[insp.extintor_id] = insp.data_inspecao;
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function diasDesde(dataPassada) {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const alvo = new Date(dataPassada + "T00:00:00");
+  return Math.round((hoje - alvo) / 86400000);
+}
+
+function situacaoInspecaoMensal(dataUltimaInspecao) {
+  if (!dataUltimaInspecao) {
+    return { texto: "Aguardando 1ª inspeção", classe: "badge-warn" };
+  }
+  const dias = diasDesde(dataUltimaInspecao);
+  if (dias >= 30) {
+    return { texto: `Inspeção necessária (${dias} dias sem inspeção)`, classe: "badge-danger" };
+  }
+  return { texto: `Em dia (há ${dias} dia(s))`, classe: "badge-ok" };
 }
 
 function situacaoVencimento(dataVencimento) {
@@ -219,6 +259,8 @@ function renderTabelaExtintores(lista) {
     const vencimento = ex.data_vencimento;
     const recarregarAte = subtrairDias(vencimento, 15);
     const situacao = situacaoVencimento(vencimento);
+    const ultimaInspecao = ultimaInspecaoPorExtintor[ex.id];
+    const situacaoInsp = situacaoInspecaoMensal(ultimaInspecao);
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><img class="avatar" src="${ex.foto_url || "https://placehold.co/40x40?text=?"}" /></td>
@@ -230,6 +272,8 @@ function renderTabelaExtintores(lista) {
       <td>${formatarDataExt(vencimento)}</td>
       <td>${formatarDataExt(recarregarAte)}</td>
       <td><span class="badge ${situacao.classe}">${situacao.texto}</span></td>
+      <td>${formatarDataExt(ultimaInspecao)}</td>
+      <td><span class="badge ${situacaoInsp.classe}">${situacaoInsp.texto}</span></td>
       <td class="row">
         <button class="btn btn-secondary" onclick="editarExtintor('${ex.id}')">✏️</button>
         <button class="btn btn-secondary" onclick="excluirExtintor('${ex.id}')">🗑️</button>
@@ -285,6 +329,8 @@ async function salvarInspecaoExtintor() {
     ["insp-conteudo", "insp-lacre", "insp-integridade", "insp-armazenamento", "insp-sinalizacao"].forEach((id) => {
       document.getElementById(id).checked = true;
     });
+    await carregarUltimasInspecoesExt();
+    renderTabelaExtintores(extintoresCache);
     carregarHistoricoInspecoesExt();
   } catch (err) {
     console.error(err);
@@ -384,6 +430,8 @@ async function excluirInspecaoExt(id) {
     const { error } = await supabaseClient.from("inspecoes_extintor").delete().eq("id", id);
     if (error) throw error;
     showToast("Inspeção excluída.", "success");
+    await carregarUltimasInspecoesExt();
+    renderTabelaExtintores(extintoresCache);
     carregarHistoricoInspecoesExt();
   } catch (err) {
     showToast("Erro ao excluir: " + err.message, "error");

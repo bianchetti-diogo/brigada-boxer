@@ -171,6 +171,7 @@ async function carregarHidrantes() {
       .order("localizacao");
     if (error) throw error;
     hidrantesCache = data || [];
+    await carregarUltimasInspecoesHid();
     renderTabelaHidrantes(hidrantesCache);
 
     const select = document.getElementById("insp-hidrante");
@@ -198,6 +199,45 @@ function situacaoVencimentoHid(dataVencimento) {
   return { texto: "Em dia", classe: "badge-ok" };
 }
 
+// ---------------- Alerta de inspeção mensal (30 dias) ----------------
+let ultimaInspecaoPorHidrante = {};
+
+async function carregarUltimasInspecoesHid() {
+  ultimaInspecaoPorHidrante = {};
+  try {
+    const { data, error } = await supabaseClient
+      .from("inspecoes_hidrante")
+      .select("hidrante_id, data_inspecao")
+      .order("data_inspecao", { ascending: false });
+    if (error) throw error;
+    (data || []).forEach((insp) => {
+      if (!ultimaInspecaoPorHidrante[insp.hidrante_id]) {
+        ultimaInspecaoPorHidrante[insp.hidrante_id] = insp.data_inspecao;
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function diasDesdeHid(dataPassada) {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const alvo = new Date(dataPassada + "T00:00:00");
+  return Math.round((hoje - alvo) / 86400000);
+}
+
+function situacaoInspecaoMensalHid(dataUltimaInspecao) {
+  if (!dataUltimaInspecao) {
+    return { texto: "Aguardando 1ª inspeção", classe: "badge-warn" };
+  }
+  const dias = diasDesdeHid(dataUltimaInspecao);
+  if (dias >= 30) {
+    return { texto: `Inspeção necessária (${dias} dias sem inspeção)`, classe: "badge-danger" };
+  }
+  return { texto: `Em dia (há ${dias} dia(s))`, classe: "badge-ok" };
+}
+
 function simNao(valor) {
   return valor ? '<span class="badge badge-ok">Sim</span>' : '<span class="badge badge-muted">Não</span>';
 }
@@ -215,6 +255,8 @@ function renderTabelaHidrantes(lista) {
 
   lista.forEach((h) => {
     const situacao = situacaoVencimentoHid(h.data_vencimento);
+    const ultimaInspecao = ultimaInspecaoPorHidrante[h.id];
+    const situacaoInsp = situacaoInspecaoMensalHid(ultimaInspecao);
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td><img class="avatar" src="${h.foto_url || "https://placehold.co/40x40?text=?"}" /></td>
@@ -225,6 +267,8 @@ function renderTabelaHidrantes(lista) {
       <td>${formatarDataHid(h.data_ultimo_teste)}</td>
       <td>${formatarDataHid(h.data_vencimento)}</td>
       <td><span class="badge ${situacao.classe}">${situacao.texto}</span></td>
+      <td>${formatarDataHid(ultimaInspecao)}</td>
+      <td><span class="badge ${situacaoInsp.classe}">${situacaoInsp.texto}</span></td>
       <td class="row">
         <button class="btn btn-secondary" onclick="editarHidrante('${h.id}')">✏️</button>
         <button class="btn btn-secondary" onclick="excluirHidrante('${h.id}')">🗑️</button>
@@ -280,6 +324,8 @@ async function salvarInspecaoHidrante() {
     ["insp-mangueira", "insp-esguicho", "insp-chave-unha", "insp-integridade", "insp-sinalizacao"].forEach((id) => {
       document.getElementById(id).checked = true;
     });
+    await carregarUltimasInspecoesHid();
+    renderTabelaHidrantes(hidrantesCache);
     carregarHistoricoInspecoesHid();
   } catch (err) {
     console.error(err);
@@ -379,6 +425,8 @@ async function excluirInspecaoHid(id) {
     const { error } = await supabaseClient.from("inspecoes_hidrante").delete().eq("id", id);
     if (error) throw error;
     showToast("Inspeção excluída.", "success");
+    await carregarUltimasInspecoesHid();
+    renderTabelaHidrantes(hidrantesCache);
     carregarHistoricoInspecoesHid();
   } catch (err) {
     showToast("Erro ao excluir: " + err.message, "error");
