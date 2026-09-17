@@ -19,16 +19,135 @@
   </div>
   <a href="index.html" class="back-link">← Menu Principal</a>
 </header>
+
 <div class="container">
-  <div class="panel empty-state">
-    <div style="font-size:2.4rem;">🚧</div>
-    <h3>Módulo em construção — Fase 4</h3>
-    <p class="text-muted">Aqui você vai cadastrar cada extintor (ID, tipo, tamanho, localização, foto e data<br>
-    da última recarga), acompanhar alertas de vencimento (30 dias antes, com recarga<br>
-    obrigatória 15 dias antes de completar 1 ano), registrar a inspeção mensal com<br>
-    2 assinaturas de brigadistas e exportar tudo em PDF.</p>
-    <a href="index.html" class="btn btn-primary mt-16">Voltar ao Menu</a>
+  <div id="config-warning" class="config-warning" style="display:none;"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cadastro">🧯 Cadastro</button>
+    <button class="tab-btn" data-tab="inspecao">✅ Inspeção Mensal</button>
   </div>
+
+  <!-- ABA CADASTRO -->
+  <section id="tab-cadastro" class="tab-content">
+    <div class="panel">
+      <h3 id="ext-form-title">Novo Extintor</h3>
+      <form id="form-extintor">
+        <input type="hidden" id="ext-id" />
+        <div class="form-grid">
+          <div class="field">
+            <label>ID do Extintor *</label>
+            <input type="text" id="ext-identificador" placeholder="Ex: EXT-01" required />
+          </div>
+          <div class="field">
+            <label>Tipo de Extintor *</label>
+            <select id="ext-tipo" required>
+              <option value="">Selecione...</option>
+              <option>Pó Químico</option>
+              <option>Água</option>
+              <option>CO2</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Tamanho *</label>
+            <select id="ext-tamanho" required>
+              <option value="">Selecione...</option>
+              <option>Pequeno</option>
+              <option>Grande</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Localização *</label>
+            <input type="text" id="ext-localizacao" placeholder="Ex: Almoxarifado - Térreo" required />
+          </div>
+          <div class="field">
+            <label>Data da Última Recarga *</label>
+            <input type="date" id="ext-data-recarga" required />
+          </div>
+          <div class="field field-full">
+            <label>Foto do extintor no local</label>
+            <div class="row">
+              <img id="ext-foto-preview" class="avatar avatar-lg" src="https://placehold.co/96x96?text=Foto" />
+              <input type="file" id="ext-foto-input" accept="image/*" />
+            </div>
+          </div>
+        </div>
+        <div class="row mt-16">
+          <button type="submit" class="btn btn-primary">💾 Salvar Extintor</button>
+          <button type="button" id="ext-btn-cancelar" class="btn btn-secondary" style="display:none;">Cancelar edição</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>Extintores Cadastrados</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Foto</th><th>ID</th><th>Tipo</th><th>Tamanho</th><th>Localização</th>
+              <th>Última Recarga</th><th>Vencimento</th><th>Recarregar até</th><th>Situação</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="ext-tabela-body"></tbody>
+        </table>
+      </div>
+      <div id="ext-lista-empty" class="empty-state" style="display:none;">Nenhum extintor cadastrado ainda.</div>
+    </div>
+  </section>
+
+  <!-- ABA INSPEÇÃO MENSAL -->
+  <section id="tab-inspecao" class="tab-content" style="display:none;">
+    <div class="panel">
+      <h3>Nova Inspeção Mensal</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label>Extintor *</label>
+          <select id="insp-extintor"><option value="">Selecione...</option></select>
+        </div>
+        <div class="field">
+          <label>Data da Inspeção *</label>
+          <input type="date" id="insp-data" required />
+        </div>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="field"><label><input type="checkbox" id="insp-conteudo" checked /> Conteúdo/Carga OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-lacre" checked /> Lacre e Pino de Segurança OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-integridade" checked /> Integridade (mangueira, válvula, pintura) OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-armazenamento" checked /> Armazenamento/Fixação OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-sinalizacao" checked /> Sinalização e Acesso Desobstruído OK</label></div>
+      </div>
+      <div class="field field-full mt-16">
+        <label>Observações</label>
+        <textarea id="insp-observacoes" placeholder="Registre qualquer pendência encontrada..."></textarea>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="field">
+          <label>Brigadista Responsável 1 *</label>
+          <select id="insp-brigadista1"><option value="">Selecione...</option></select>
+        </div>
+        <div class="field">
+          <label>Brigadista Responsável 2 *</label>
+          <select id="insp-brigadista2"><option value="">Selecione...</option></select>
+        </div>
+      </div>
+      <div class="row mt-16">
+        <button id="insp-btn-salvar" class="btn btn-primary">💾 Salvar Inspeção</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Histórico de Inspeções</h3>
+      <div id="insp-historico-lista"></div>
+      <div id="insp-historico-empty" class="empty-state" style="display:none;">Nenhuma inspeção registrada ainda.</div>
+    </div>
+  </section>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/extintores.js"></script>
 </body>
 </html>

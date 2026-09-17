@@ -19,16 +19,119 @@
   </div>
   <a href="index.html" class="back-link">← Menu Principal</a>
 </header>
+
 <div class="container">
-  <div class="panel empty-state">
-    <div style="font-size:2.4rem;">🚧</div>
-    <h3>Módulo em construção — Fase 4</h3>
-    <p class="text-muted">Aqui você vai cadastrar cada hidrante (localização, mangueira, esguicho, chave-unha,<br>
-    foto e data do último teste hidrostático), acompanhar alertas de vencimento (30 dias<br>
-    antes de completar 1 ano), registrar a inspeção mensal com 2 assinaturas de<br>
-    brigadistas e exportar tudo em PDF.</p>
-    <a href="index.html" class="btn btn-primary mt-16">Voltar ao Menu</a>
+  <div id="config-warning" class="config-warning" style="display:none;"></div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="cadastro">🚰 Cadastro</button>
+    <button class="tab-btn" data-tab="inspecao">✅ Inspeção Mensal</button>
   </div>
+
+  <!-- ABA CADASTRO -->
+  <section id="tab-cadastro" class="tab-content">
+    <div class="panel">
+      <h3 id="hid-form-title">Novo Hidrante</h3>
+      <form id="form-hidrante">
+        <input type="hidden" id="hid-id" />
+        <div class="form-grid">
+          <div class="field field-full">
+            <label>Localização do Hidrante *</label>
+            <input type="text" id="hid-localizacao" placeholder="Ex: Corredor Expedição - Térreo" required />
+          </div>
+          <div class="field">
+            <label>Data do Último Teste Hidrostático *</label>
+            <input type="date" id="hid-data-teste" required />
+          </div>
+        </div>
+        <div class="form-grid mt-16">
+          <div class="field"><label><input type="checkbox" id="hid-mangueira" /> Possui Mangueira</label></div>
+          <div class="field"><label><input type="checkbox" id="hid-esguicho" /> Possui Esguicho</label></div>
+          <div class="field"><label><input type="checkbox" id="hid-chave-unha" /> Possui Par de Chaves Unha</label></div>
+        </div>
+        <div class="field field-full mt-16">
+          <label>Foto do hidrante</label>
+          <div class="row">
+            <img id="hid-foto-preview" class="avatar avatar-lg" src="https://placehold.co/96x96?text=Foto" />
+            <input type="file" id="hid-foto-input" accept="image/*" />
+          </div>
+        </div>
+        <div class="row mt-16">
+          <button type="submit" class="btn btn-primary">💾 Salvar Hidrante</button>
+          <button type="button" id="hid-btn-cancelar" class="btn btn-secondary" style="display:none;">Cancelar edição</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h3>Hidrantes Cadastrados</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Foto</th><th>Localização</th><th>Mangueira</th><th>Esguicho</th><th>Chave-Unha</th>
+              <th>Último Teste</th><th>Vencimento</th><th>Situação</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="hid-tabela-body"></tbody>
+        </table>
+      </div>
+      <div id="hid-lista-empty" class="empty-state" style="display:none;">Nenhum hidrante cadastrado ainda.</div>
+    </div>
+  </section>
+
+  <!-- ABA INSPEÇÃO MENSAL -->
+  <section id="tab-inspecao" class="tab-content" style="display:none;">
+    <div class="panel">
+      <h3>Nova Inspeção Mensal</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label>Hidrante *</label>
+          <select id="insp-hidrante"><option value="">Selecione...</option></select>
+        </div>
+        <div class="field">
+          <label>Data da Inspeção *</label>
+          <input type="date" id="insp-data" required />
+        </div>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="field"><label><input type="checkbox" id="insp-mangueira" checked /> Mangueira OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-esguicho" checked /> Esguicho OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-chave-unha" checked /> Chave-Unha OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-integridade" checked /> Integridade do Abrigo/Registro OK</label></div>
+        <div class="field"><label><input type="checkbox" id="insp-sinalizacao" checked /> Sinalização e Acesso Desobstruído OK</label></div>
+      </div>
+      <div class="field field-full mt-16">
+        <label>Observações</label>
+        <textarea id="insp-observacoes" placeholder="Registre qualquer pendência encontrada..."></textarea>
+      </div>
+      <div class="form-grid mt-16">
+        <div class="field">
+          <label>Brigadista Responsável 1 *</label>
+          <select id="insp-brigadista1"><option value="">Selecione...</option></select>
+        </div>
+        <div class="field">
+          <label>Brigadista Responsável 2 *</label>
+          <select id="insp-brigadista2"><option value="">Selecione...</option></select>
+        </div>
+      </div>
+      <div class="row mt-16">
+        <button id="insp-btn-salvar" class="btn btn-primary">💾 Salvar Inspeção</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Histórico de Inspeções</h3>
+      <div id="insp-historico-lista"></div>
+      <div id="insp-historico-empty" class="empty-state" style="display:none;">Nenhuma inspeção registrada ainda.</div>
+    </div>
+  </section>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/hidrantes.js"></script>
 </body>
 </html>

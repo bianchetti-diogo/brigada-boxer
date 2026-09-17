@@ -67,8 +67,17 @@ políticas de acesso público nas tabelas e no Storage).
   recalculado automaticamente comparando o prazo com a data atual, e
   exportação em PDF.
 
-## O que vem nas próximas fases
+- **Fase 4 — Extintores e Hidrantes (✔️ entregue):**
+  - Extintores: cadastro (ID, tipo, tamanho, localização, foto, data da
+    última recarga), vencimento calculado automaticamente (+1 ano), coluna
+    "Recarregar até" (15 dias antes do vencimento) e badge de situação
+    (Em dia / alerta a partir de 30 dias / Vencido).
+  - Hidrantes: cadastro (localização, mangueira/esguicho/chave-unha, foto,
+    data do teste hidrostático), vencimento +1 ano e mesmo alerta de 30 dias.
+  - Inspeção mensal de ambos: checklist (conteúdo/mangueira, lacre/esguicho,
+    integridade, armazenamento/chave-unha, sinalização), observações, 2
+    brigadistas responsáveis, geração de PDF e upload da inspeção assinada.
 
-- **Fase 4:** Cadastro e cronograma de inspeção de Extintores e Hidrantes
-  (alertas de vencimento, inspeção mensal com 2 assinaturas, PDF, upload).
+## O que vem na próxima fase
+
 - **Fase 5:** Dashboard geral consolidado.
