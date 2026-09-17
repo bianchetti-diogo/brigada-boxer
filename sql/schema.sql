@@ -154,3 +154,28 @@ begin
     );
   end loop;
 end $$;
+
+-- -------------------------------------------------------------------------
+-- Storage: marcar um bucket como "Public" só libera LEITURA dos arquivos.
+-- Para permitir upload (INSERT) sem login, é preciso liberar também no
+-- storage.objects, que tem seu próprio RLS.
+-- -------------------------------------------------------------------------
+drop policy if exists "public_read_fotos_documentos" on storage.objects;
+create policy "public_read_fotos_documentos"
+on storage.objects for select
+using (bucket_id in ('fotos','documentos'));
+
+drop policy if exists "public_insert_fotos_documentos" on storage.objects;
+create policy "public_insert_fotos_documentos"
+on storage.objects for insert
+with check (bucket_id in ('fotos','documentos'));
+
+drop policy if exists "public_update_fotos_documentos" on storage.objects;
+create policy "public_update_fotos_documentos"
+on storage.objects for update
+using (bucket_id in ('fotos','documentos'));
+
+drop policy if exists "public_delete_fotos_documentos" on storage.objects;
+create policy "public_delete_fotos_documentos"
+on storage.objects for delete
+using (bucket_id in ('fotos','documentos'));
