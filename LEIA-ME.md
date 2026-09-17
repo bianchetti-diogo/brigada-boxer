@@ -42,7 +42,7 @@ políticas de acesso público nas tabelas e no Storage).
 
 ---
 
-## O que já funciona nesta Fase 1 (testado em produção ✅)
+## O que já funciona (testado em produção ✅ / entregue ✔️)
 
 - Menu principal com os 4 botões pedidos + acesso ao cadastro de brigadistas.
 - Cadastro de brigadista com foto (upload testado e funcionando): nome, cargo,
@@ -51,11 +51,17 @@ políticas de acesso público nas tabelas e no Storage).
   Socorristas/Combatentes na base.
 - Lista de integrantes (foto, nome, cargo, função) com botão de exportar PDF.
 - Editar e excluir brigadistas.
+- Identidade visual: tema escuro moderno, logo Boxer (`assets/logo.svg`) e
+  fonte Inter em todas as páginas.
+- **Fase 2 — Gestão de ATA (✔️ entregue):** registro da data e do conteúdo da
+  reunião, ações adicionadas dinamicamente (descrição, responsável, prazo) que
+  caem automaticamente no Plano de Ação, geração de PDF (título "ATA DA
+  REUNIÃO DA BRIGADA BOXER", conteúdo, ações e tabela de assinatura de todos
+  os brigadistas ativos), histórico de ATAs consultável e campo de upload para
+  anexar a ATA assinada digitalizada.
 
 ## O que vem nas próximas fases
 
-- **Fase 2:** Gestão de ATA (registro de reunião, ações, geração de PDF,
-  vínculo com assinaturas dos brigadistas, histórico e upload da ATA assinada).
 - **Fase 3:** Plano de Ação (indicadores, filtros, status automático por prazo,
   exportação em PDF).
 - **Fase 4:** Cadastro e cronograma de inspeção de Extintores e Hidrantes
