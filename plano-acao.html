@@ -19,15 +19,105 @@
   </div>
   <a href="index.html" class="back-link">← Menu Principal</a>
 </header>
+
 <div class="container">
-  <div class="panel empty-state">
-    <div style="font-size:2.4rem;">🚧</div>
-    <h3>Módulo em construção — Fase 3</h3>
-    <p class="text-muted">Aqui você vai ver os indicadores (total, em andamento, atrasadas, concluídas),<br>
-    filtrar e ordenar ações por data, status ou responsável, inserir ações manualmente<br>
-    (além das que vierem da ATA) e exportar tudo em PDF.</p>
-    <a href="index.html" class="btn btn-primary mt-16">Voltar ao Menu</a>
+  <div id="config-warning" class="config-warning" style="display:none;"></div>
+
+  <div class="indicators">
+    <div class="indicator-card total">
+      <div class="value" id="ind-total">0</div>
+      <div class="label">Total de Ações</div>
+    </div>
+    <div class="indicator-card andamento">
+      <div class="value" id="ind-andamento">0</div>
+      <div class="label">Em Andamento</div>
+    </div>
+    <div class="indicator-card atrasada">
+      <div class="value" id="ind-atrasada">0</div>
+      <div class="label">Atrasadas</div>
+    </div>
+    <div class="indicator-card concluida">
+      <div class="value" id="ind-concluida">0</div>
+      <div class="label">Concluídas</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Adicionar Ação Manualmente</h3>
+    <div class="form-grid">
+      <div class="field field-full">
+        <label>Descrição da Ação *</label>
+        <input type="text" id="nova-descricao" placeholder="O que precisa ser feito?" />
+      </div>
+      <div class="field">
+        <label>Responsável *</label>
+        <input type="text" id="nova-responsavel" list="lista-brigadistas-plano" placeholder="Nome do responsável" />
+      </div>
+      <div class="field">
+        <label>Prazo *</label>
+        <input type="date" id="nova-prazo" />
+      </div>
+    </div>
+    <div class="row mt-16">
+      <button id="btn-add-manual" class="btn btn-primary">+ Adicionar Ação</button>
+    </div>
+  </div>
+  <datalist id="lista-brigadistas-plano"></datalist>
+
+  <div class="panel">
+    <div class="row justify-between mb-16">
+      <h3 style="margin:0;">Ações da Brigada</h3>
+      <button id="btn-export-plano-pdf" class="btn btn-outline">📄 Exportar PDF</button>
+    </div>
+
+    <div class="row mb-16">
+      <div class="field" style="min-width:180px;">
+        <label>Filtrar por status</label>
+        <select id="filtro-status">
+          <option value="todas">Todas</option>
+          <option value="Em andamento">Em andamento</option>
+          <option value="Atrasada">Atrasada</option>
+          <option value="Concluída">Concluída</option>
+        </select>
+      </div>
+      <div class="field" style="min-width:180px;">
+        <label>Ordenar por</label>
+        <select id="ordenar-por">
+          <option value="prazo">Prazo</option>
+          <option value="status">Status</option>
+          <option value="responsavel">Responsável</option>
+        </select>
+      </div>
+      <div class="field" style="flex:1; min-width:200px;">
+        <label>Buscar (descrição ou responsável)</label>
+        <input type="text" id="busca-acao" placeholder="Digite para buscar..." />
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Descrição</th>
+            <th>Responsável</th>
+            <th>Prazo</th>
+            <th>Conclusão</th>
+            <th>Status</th>
+            <th>Origem</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="tabela-acoes-body"></tbody>
+      </table>
+    </div>
+    <div id="acoes-plano-empty" class="empty-state" style="display:none;">Nenhuma ação encontrada.</div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/plano-acao.js"></script>
 </body>
 </html>

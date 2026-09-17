@@ -60,10 +60,15 @@ políticas de acesso público nas tabelas e no Storage).
   os brigadistas ativos), histórico de ATAs consultável e campo de upload para
   anexar a ATA assinada digitalizada.
 
+- **Fase 3 — Plano de Ação (✔️ entregue):** balões de indicadores (total, em
+  andamento, atrasadas, concluídas), filtro por status, ordenação por prazo/
+  status/responsável, busca por texto, inserção manual de ações, edição
+  direta na tabela (descrição, responsável, prazo, data de conclusão), status
+  recalculado automaticamente comparando o prazo com a data atual, e
+  exportação em PDF.
+
 ## O que vem nas próximas fases
 
-- **Fase 3:** Plano de Ação (indicadores, filtros, status automático por prazo,
-  exportação em PDF).
 - **Fase 4:** Cadastro e cronograma de inspeção de Extintores e Hidrantes
   (alertas de vencimento, inspeção mensal com 2 assinaturas, PDF, upload).
 - **Fase 5:** Dashboard geral consolidado.
