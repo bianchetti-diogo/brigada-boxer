@@ -235,16 +235,17 @@ function exportarPlanoPDF() {
   }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
+  const pageWidth = doc.internal.pageSize.getWidth();
 
   doc.setTextColor(225, 29, 46);
   doc.setFontSize(15);
   doc.setFont("helvetica", "bold");
-  doc.text("BRIGADA BOXER - Plano de Ação", 14, 16);
+  doc.text("BRIGADA BOXER - Plano de Ação", pageWidth / 2, 16, { align: "center" });
 
   doc.setTextColor(30, 30, 30);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text("Gerado em " + new Date().toLocaleDateString("pt-BR"), 14, 22);
+  doc.text("Gerado em " + new Date().toLocaleDateString("pt-BR"), pageWidth / 2, 22, { align: "center" });
 
   doc.autoTable({
     startY: 28,
@@ -258,7 +259,7 @@ function exportarPlanoPDF() {
       a.origem,
     ]),
     styles: { fontSize: 8 },
-    headStyles: { fillColor: [225, 29, 46] },
+    headStyles: { fillColor: [31, 78, 121] },
   });
 
   doc.save("brigada-boxer-plano-de-acao.pdf");

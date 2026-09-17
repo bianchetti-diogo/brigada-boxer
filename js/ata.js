@@ -267,18 +267,21 @@ function gerarPdfAta(ataId, atas, todasAcoes) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const marginX = 14;
-  let y = 18;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const contentWidth = pageWidth - marginX * 2;
+  const corTabela = [31, 78, 121];
+  let y = 20;
 
   doc.setTextColor(225, 29, 46);
   doc.setFontSize(15);
   doc.setFont("helvetica", "bold");
-  doc.text("ATA DA REUNIÃO DA BRIGADA BOXER", marginX, y);
-  y += 8;
+  doc.text("ATA DA REUNIÃO DA BRIGADA BOXER", pageWidth / 2, y, { align: "center" });
+  y += 9;
 
   doc.setTextColor(30, 30, 30);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text("Data da reunião: " + formatarDataAta(ata.data_reuniao), marginX, y);
+  doc.text("Data da reunião: " + formatarDataAta(ata.data_reuniao), pageWidth / 2, y, { align: "center" });
   y += 10;
 
   doc.setFontSize(11);
@@ -287,8 +290,8 @@ function gerarPdfAta(ataId, atas, todasAcoes) {
   y += 6;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
-  const linhasConteudo = doc.splitTextToSize(ata.conteudo || "-", 180);
-  doc.text(linhasConteudo, marginX, y);
+  const linhasConteudo = doc.splitTextToSize(ata.conteudo || "-", contentWidth);
+  doc.text(linhasConteudo, marginX, y, { maxWidth: contentWidth, align: "justify" });
   y += linhasConteudo.length * 5 + 8;
 
   if (y > 255) {
@@ -306,7 +309,7 @@ function gerarPdfAta(ataId, atas, todasAcoes) {
       head: [["Descrição", "Responsável", "Prazo"]],
       body: acoesDaAta.map((a) => [a.descricao, a.responsavel, formatarDataAta(a.prazo)]),
       styles: { fontSize: 9 },
-      headStyles: { fillColor: [225, 29, 46] },
+      headStyles: { fillColor: corTabela },
       margin: { left: marginX, right: marginX },
     });
     y = doc.lastAutoTable.finalY + 10;
@@ -332,7 +335,7 @@ function gerarPdfAta(ataId, atas, todasAcoes) {
     head: [["Nome", "Cargo", "Assinatura"]],
     body: brigadistasAtivos.map((b) => [b.nome, b.cargo, ""]),
     styles: { fontSize: 9, minCellHeight: 10 },
-    headStyles: { fillColor: [11, 13, 18] },
+    headStyles: { fillColor: corTabela },
     margin: { left: marginX, right: marginX },
   });
 

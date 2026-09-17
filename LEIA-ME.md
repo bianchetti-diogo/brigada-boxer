@@ -1,9 +1,8 @@
-# BRIGADA BOXER — Fase 1 (Cadastro de Brigadistas)
+# BRIGADA BOXER
 
-Esta é a primeira fase do sistema. Já está pronto: Menu principal, Cadastro de
-Brigadistas (com foto), Quadro Hierárquico e Lista de Integrantes com exportação
-em PDF. Os outros botões do menu (ATA, Plano de Ação, Extintor, Hidrante,
-Dashboard) estão como "em construção" — serão preenchidos nas próximas fases.
+Sistema completo de gestão da brigada de incêndio: cadastro de brigadistas,
+gestão de ATA, plano de ação, cronograma de inspeção de extintores e
+hidrantes, e dashboard geral. Todas as 5 fases estão entregues.
 
 O projeto já está publicado em:
 - Supabase (banco de dados + storage de fotos/documentos) — projeto "BRIGADA BOXER"
@@ -78,6 +77,9 @@ políticas de acesso público nas tabelas e no Storage).
     integridade, armazenamento/chave-unha, sinalização), observações, 2
     brigadistas responsáveis, geração de PDF e upload da inspeção assinada.
 
-## O que vem na próxima fase
+- **Fase 5 — Dashboard (✔️ entregue):** indicadores gerais (brigadistas
+  ativos, ações totais/atrasadas, extintores/hidrantes vencidos ou em
+  alerta), barras de cumprimento (Plano de Ação, inspeção de extintores e de
+  hidrantes no mês atual) e lista de alertas e pendências.
 
-- **Fase 5:** Dashboard geral consolidado.
+## Projeto completo — todas as 5 fases entregues ✔️

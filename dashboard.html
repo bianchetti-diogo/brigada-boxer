@@ -19,15 +19,58 @@
   </div>
   <a href="index.html" class="back-link">← Menu Principal</a>
 </header>
+
 <div class="container">
-  <div class="panel empty-state">
-    <div style="font-size:2.4rem;">🚧</div>
-    <h3>Módulo em construção — Fase 5</h3>
-    <p class="text-muted">Aqui você vai ver os indicadores consolidados de todos os módulos: prazos de<br>
-    ações, cumprimento do plano de ação, status dos cronogramas de extintores e<br>
-    hidrantes e visão geral da brigada.</p>
-    <a href="index.html" class="btn btn-primary mt-16">Voltar ao Menu</a>
+  <div id="config-warning" class="config-warning" style="display:none;"></div>
+
+  <div class="indicators" style="grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));">
+    <div class="indicator-card">
+      <div class="value" id="dash-brigadistas" style="color:var(--navy);">0</div>
+      <div class="label">Brigadistas Ativos</div>
+    </div>
+    <div class="indicator-card">
+      <div class="value" id="dash-acoes-total" style="color:var(--navy);">0</div>
+      <div class="label">Ações Totais</div>
+    </div>
+    <div class="indicator-card">
+      <div class="value" id="dash-acoes-atrasadas" style="color:var(--danger);">0</div>
+      <div class="label">Ações Atrasadas</div>
+    </div>
+    <div class="indicator-card">
+      <div class="value" id="dash-extintores-alerta" style="color:var(--warn);">0</div>
+      <div class="label">Extintores Vencidos/Alerta</div>
+    </div>
+    <div class="indicator-card">
+      <div class="value" id="dash-hidrantes-alerta" style="color:var(--warn);">0</div>
+      <div class="label">Hidrantes Vencidos/Alerta</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Cumprimento</h3>
+    <div class="progress-item">
+      <div class="progress-label"><span>Plano de Ação (ações concluídas)</span><span class="pct" id="pct-plano">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-plano" style="width:0%;"></div></div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-label"><span>Inspeção de Extintores neste mês</span><span class="pct" id="pct-ext">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-ext" style="width:0%;"></div></div>
+    </div>
+    <div class="progress-item">
+      <div class="progress-label"><span>Inspeção de Hidrantes neste mês</span><span class="pct" id="pct-hid">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="bar-hid" style="width:0%;"></div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Alertas e Pendências</h3>
+    <div id="dash-alertas-lista"></div>
+    <div id="dash-alertas-empty" class="empty-state" style="display:none;">Nenhum alerta no momento. Tudo em dia! ✅</div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/dashboard.js"></script>
 </body>
 </html>

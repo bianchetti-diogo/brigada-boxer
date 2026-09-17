@@ -393,20 +393,22 @@ function gerarPdfInspecaoHid(inspecaoId, inspecoes) {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const marginX = 14;
-  let y = 18;
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const corTabela = [31, 78, 121];
+  let y = 20;
 
   doc.setTextColor(225, 29, 46);
   doc.setFontSize(15);
   doc.setFont("helvetica", "bold");
-  doc.text("BRIGADA BOXER - Inspeção Mensal de Hidrante", marginX, y);
+  doc.text("BRIGADA BOXER - Inspeção Mensal de Hidrante", pageWidth / 2, y, { align: "center" });
   y += 9;
 
   doc.setTextColor(30, 30, 30);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text(`Hidrante: ${h ? h.localizacao : "-"}`, marginX, y);
+  doc.text(`Hidrante: ${h ? h.localizacao : "-"}`, pageWidth / 2, y, { align: "center" });
   y += 6;
-  doc.text(`Data da inspeção: ${formatarDataHid(insp.data_inspecao)}`, marginX, y);
+  doc.text(`Data da inspeção: ${formatarDataHid(insp.data_inspecao)}`, pageWidth / 2, y, { align: "center" });
   y += 10;
 
   doc.autoTable({
@@ -420,7 +422,7 @@ function gerarPdfInspecaoHid(inspecaoId, inspecoes) {
       ["Sinalização e acesso desobstruído", insp.sinalizacao_ok ? "OK" : "PENDÊNCIA"],
     ],
     styles: { fontSize: 10 },
-    headStyles: { fillColor: [225, 29, 46] },
+    headStyles: { fillColor: corTabela },
     margin: { left: marginX, right: marginX },
   });
   y = doc.lastAutoTable.finalY + 8;
@@ -441,7 +443,7 @@ function gerarPdfInspecaoHid(inspecaoId, inspecoes) {
       [nomeBrigadistaHid(insp.brigadista2_id), ""],
     ],
     styles: { fontSize: 10, minCellHeight: 14 },
-    headStyles: { fillColor: [22, 50, 79] },
+    headStyles: { fillColor: corTabela },
     margin: { left: marginX, right: marginX },
   });
 

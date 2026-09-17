@@ -366,6 +366,45 @@ th { color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; le
 .indicator-card.atrasada .value { color: var(--danger); }
 .indicator-card.concluida .value { color: var(--ok); }
 
+/* ---- Progresso (Dashboard) ---- */
+.progress-item { margin-bottom: 18px; }
+.progress-item:last-child { margin-bottom: 0; }
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.progress-label .pct { color: var(--navy-2); }
+.progress-track {
+  background: #eceef1;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--navy-2), var(--navy));
+  transition: width 0.3s ease;
+}
+
+/* ---- Alertas (Dashboard) ---- */
+.alert-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.alert-item:last-child { border-bottom: none; }
+.alert-item .titulo { font-weight: 600; }
+.alert-item .sub { color: var(--text-muted); font-size: 0.78rem; }
+
 /* ---- Empty state ---- */
 .empty-state {
   text-align: center;
